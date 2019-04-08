@@ -11,6 +11,26 @@
 #include "calibri_36.h"
 #include "arial_72.h"
 
+#define BUT_PIO           PIOA
+#define BUT_PIO_ID        10
+#define BUT_PIO_IDX       4u
+#define BUT_PIO_IDX_MASK  (1u << BUT_PIO_IDX)
+
+void init(void);
+
+void init(void)
+{
+	sysclk_init();
+	
+	WDT->WDT_MR = WDT_MR_WDDIS;
+	pmc_enable_periph_clk(BUT_PIO_ID);
+	
+
+	pio_set_input(BUT_PIO, BUT_PIO_IDX_MASK, PIO_DEFAULT);
+	pio_pull_up(BUT_PIO, BUT_PIO_IDX_MASK, 1);
+}
+
+
 
 struct ili9488_opt_t g_ili9488_display_opt;
 
