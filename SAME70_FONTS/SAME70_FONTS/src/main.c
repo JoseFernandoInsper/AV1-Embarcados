@@ -13,7 +13,7 @@
 
 #define BUT_PIO           PIOA
 #define BUT_PIO_ID        10
-#define BUT_PIO_IDX       4u
+#define BUT_PIO_IDX       11u
 #define BUT_PIO_IDX_MASK  (1u << BUT_PIO_IDX)
 
 void init(void);
@@ -69,10 +69,9 @@ int main(void) {
 	sysclk_init();	
 	configure_lcd();
 	
-	font_draw_text(&sourcecodepro_28, "OIMUNDO", 50, 50, 1);
+	font_draw_text(&calibri_36, "Oi vrau #$!@", 50, 50, 1);
 	font_draw_text(&calibri_36, "Oi vrau #$!@", 50, 100, 1);
 	font_draw_text(&arial_72, "161297", 50, 200, 2);
-	font_draw_text(&sourcecodepro_28, "OIMUNDO", 50, 50, 1);
 
 	while(1) {
 		if(!pio_get(BUT_PIO, PIO_INPUT, BUT_PIO_IDX_MASK)){
