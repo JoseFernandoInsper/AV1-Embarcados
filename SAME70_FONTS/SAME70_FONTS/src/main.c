@@ -16,7 +16,30 @@
 #define BUT_PIO_IDX       11u
 #define BUT_PIO_IDX_MASK  (1u << BUT_PIO_IDX)
 
+volatile Bool f_rtt_alarme = false;
+
+void pin_toggle(Pio *pio, uint32_t mask);
+static void RTT_init(uint16_t pllPreScale, uint32_t IrqNPulses);
+
+
 void init(void);
+
+void RTT_Handler(void)
+{
+	uint32_t ul_status;
+
+	/* Get RTT status */
+	ul_status = rtt_get_status(RTT);
+
+	/* IRQ due to Time has changed */
+	if ((ul_status & RTT_SR_RTTINC) == RTT_SR_RTTINC) {  }
+
+	/* IRQ due to Alarm */
+	if ((ul_status & RTT_SR_ALMS) == RTT_SR_ALMS) {
+		pin_toggle(BUT_PIO, BUT_PIO_IDX_MASK);    // BLINK but
+		f_rtt_alarme = true;                  // flag RTT alarme
+	}
+}
 
 void init(void)
 {
@@ -30,7 +53,16 @@ void init(void)
 	pio_pull_up(BUT_PIO, BUT_PIO_IDX_MASK, 1);
 }
 
+void pin_toggle(Pio *pio, uint32_t mask){
+	if(pio_get_output_data_status(pio, mask))
+	pio_clear(pio, mask);
+	else
+	pio_set(pio,mask);
+}
 
+static float get_time_rtt(){
+	uint ul_previous_time = rtt_read_timer_value(RTT);
+}
 
 struct ili9488_opt_t g_ili9488_display_opt;
 
@@ -72,9 +104,13 @@ int main(void) {
 	font_draw_text(&calibri_36, "Oi vrau #$!@", 50, 50, 1);
 	font_draw_text(&calibri_36, "Oi vrau #$!@", 50, 100, 1);
 	font_draw_text(&arial_72, "161297", 50, 200, 2);
+	
 
 	while(1) {
 		if(!pio_get(BUT_PIO, PIO_INPUT, BUT_PIO_IDX_MASK)){
+			
+		}
+		else{
 			
 		}
 		
