@@ -16,6 +16,8 @@
 #define BUT_PIO_IDX       4u
 #define BUT_PIO_IDX_MASK  (1u << BUT_PIO_IDX)
 
+
+
 void init(void);
 
 void init(void)
@@ -30,6 +32,13 @@ void init(void)
 	pio_pull_up(BUT_PIO, BUT_PIO_IDX_MASK, 1);
 }
 
+int w(float f){
+	return 6*f;
+}
+
+int velocidade (float w){
+	return w*2;
+}
 
 
 struct ili9488_opt_t g_ili9488_display_opt;
@@ -64,15 +73,19 @@ void font_draw_text(tFont *font, const char *text, int x, int y, int spacing) {
 
 
 int main(void) {
-	init();
+	//init();
 	board_init();
 	sysclk_init();	
 	configure_lcd();
 	
-	font_draw_text(&sourcecodepro_28, "OIMUNDO", 50, 50, 1);
-	font_draw_text(&calibri_36, "Oi Mundo! #$!@", 50, 100, 1);
-	font_draw_text(&arial_72, "102456", 50, 200, 2);
+	font_draw_text(&sourcecodepro_28, "Velocidade: ", 50, 50, 1);
+	font_draw_text(&calibri_36, "Distancia:  ", 50, 100, 1);
+	font_draw_text(&arial_72, "Tempo: ", 50, 200, 2);
 	while(1) {
-		
+		/**
+		if(!pio_get(BUT_PIO, PIO_INPUT, BUT_PIO_IDX_MASK)){
+			
+		}
+		**/
 	}
 }
