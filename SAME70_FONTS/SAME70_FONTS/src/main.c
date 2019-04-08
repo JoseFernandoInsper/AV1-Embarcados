@@ -64,6 +64,7 @@ void font_draw_text(tFont *font, const char *text, int x, int y, int spacing) {
 
 
 int main(void) {
+	init();
 	board_init();
 	sysclk_init();	
 	configure_lcd();
