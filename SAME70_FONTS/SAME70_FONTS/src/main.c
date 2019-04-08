@@ -124,8 +124,9 @@ int main(void) {
 	
 	f_rtt_alarme = true;
 	
-	font_draw_text(&calibri_36, "Oi vrau #$!@", 50, 50, 1);
-	font_draw_text(&calibri_36, "Oi vrau #$!@", 50, 100, 1);
+	font_draw_text(&calibri_36, "velocidade #$!@", 50, 50, 1);
+	font_draw_text(&calibri_36, "distancia #$!@", 50, 100, 1);
+	font_draw_text(&calibri_36, "tempo: #$!@", 50, 150, 1);
 	font_draw_text(&arial_72, "161297", 50, 200, 2);
 	
 
@@ -133,6 +134,7 @@ int main(void) {
 		if(!pio_get(BUT_PIO, PIO_INPUT, BUT_PIO_IDX_MASK)){
 			uint16_t pllPreScale = (int) (((float) 32768) / 2.0);
 			uint32_t irqRTTvalue  = 4;
+			get_time_rtt();
 		}
 		else{
 			f_rtt_alarme = false;
