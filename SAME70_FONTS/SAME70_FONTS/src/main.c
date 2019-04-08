@@ -64,6 +64,27 @@ static float get_time_rtt(){
 	uint ul_previous_time = rtt_read_timer_value(RTT);
 }
 
+static void RTT_init(uint16_t pllPreScale, uint32_t IrqNPulses)
+{
+	uint32_t ul_previous_time;
+
+	/* Configure RTT for a 1 second tick interrupt */
+	rtt_sel_source(RTT, false);
+	rtt_init(RTT, pllPreScale);
+	
+	ul_previous_time = rtt_read_timer_value(RTT);
+	while (ul_previous_time == rtt_read_timer_value(RTT));
+	
+	rtt_write_alarm_time(RTT, IrqNPulses+ul_previous_time);
+
+	/* Enable RTT interrupt */
+	NVIC_DisableIRQ(RTT_IRQn);
+	NVIC_ClearPendingIRQ(RTT_IRQn);
+	NVIC_SetPriority(RTT_IRQn, 0);
+	NVIC_EnableIRQ(RTT_IRQn);
+	rtt_enable_interrupt(RTT, RTT_MR_ALMIEN);
+}
+
 struct ili9488_opt_t g_ili9488_display_opt;
 
 void configure_lcd(void){
@@ -101,6 +122,8 @@ int main(void) {
 	sysclk_init();	
 	configure_lcd();
 	
+	f_rtt_alarme = true;
+	
 	font_draw_text(&calibri_36, "Oi vrau #$!@", 50, 50, 1);
 	font_draw_text(&calibri_36, "Oi vrau #$!@", 50, 100, 1);
 	font_draw_text(&arial_72, "161297", 50, 200, 2);
@@ -108,10 +131,11 @@ int main(void) {
 
 	while(1) {
 		if(!pio_get(BUT_PIO, PIO_INPUT, BUT_PIO_IDX_MASK)){
-			
+			uint16_t pllPreScale = (int) (((float) 32768) / 2.0);
+			uint32_t irqRTTvalue  = 4;
 		}
 		else{
-			
+			f_rtt_alarme = false;
 		}
 		
 	}
